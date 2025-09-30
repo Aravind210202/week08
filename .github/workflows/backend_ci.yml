@@ -20,7 +20,8 @@ on:
 env:
   # ACR Login Server (e.g., myregistry.azurecr.io)
   # This needs to be set as a GitHub Repository Secret
-  ACR_LOGIN_SERVER: ${{ secrets.AZURE_CONTAINER_REGISTRY }}
+  ACR_LOGIN_SERVER: ${{ secrets.AZURE_LOGIN_SERVER }}
+  ACR_NAME: ${{ secrets.ACR_NAME }}
   # Dynamically generate image tags based on Git SHA and GitHub Run ID
   # This provides unique, traceable tags for each image build
   IMAGE_TAG: ${{ github.sha }}-${{ github.run_id }}
@@ -147,5 +148,7 @@ jobs:
 
     # Logout from Azure for security (runs even if image push fails)
     - name: Logout from Azure
-      run: az logout
       if: always()
+      run: |
+        az logout || true
+
